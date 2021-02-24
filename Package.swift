@@ -6,6 +6,15 @@ let buildCommit = "8d50049"
 let package = Package(
     name: "Xash3D",
     products: [
+        // iOS support
+        .library(
+            name: "Xash3D",
+            type: .static,
+            targets: [
+                "Xash3D",
+            ]
+        ),
+        // macOS and Linux
         .executable(
             name: "xash3d",
             targets: ["GameLauncher"]
@@ -14,7 +23,23 @@ let package = Package(
             name: "xash",
             type: .dynamic,
             targets: ["Xash3D"]
-        )
+        ),
+        .library(
+            name: "menu",
+            type: .dynamic,
+            targets: ["UserInterface"]
+        ),
+        /*
+        .library(
+            name: "ref_soft",
+            type: .dynamic,
+            targets: ["SoftwareGL"]
+        ),
+        .library(
+            name: "ref_gl",
+            type: .dynamic,
+            targets: ["HardwareGL"]
+        )*/
     ],
     dependencies: [
         /*
@@ -27,7 +52,7 @@ let package = Package(
         .target(
             name: "Xash3D",
             dependencies: [
-                "CSDL2",
+                "CSDL2"
             ],
             cSettings: [
                 .define("XASH_BUILD_COMMIT", to: "\"\(buildCommit)\""),
@@ -80,6 +105,25 @@ let package = Package(
                 .apt(["libsdl2-dev"])
             ]
         ),
+        .target(
+            name: "UserInterface",
+            dependencies: [
+            ],
+            cSettings: [
+                .define("XASH_BUILD_COMMIT", to: "\"\(buildCommit)\""),
+                .define("HAVE_TGMATH_H", to: "1"),
+                .define("HAVE_STDINT_H", to: "1"),
+                .define("STDINT_H", to: "\"stdint.h\""),
+                .define("XASH_LOW_MEMORY", to: "0"),
+                .headerSearchPath("./../Xash3D/include"),
+                .headerSearchPath("./"),
+                .headerSearchPath("./controls"),
+                .headerSearchPath("./font"),
+                .headerSearchPath("./menus"),
+                .headerSearchPath("./miniutl"),
+                .headerSearchPath("./model"),
+            ]
+        )
     ],
     cLanguageStandard: .c11,
     cxxLanguageStandard: .cxx11
